@@ -1,58 +1,132 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Sistem Perpustakaan Digital
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistem Perpustakaan Digital adalah aplikasi berbasis web yang dibangun menggunakan framework **Laravel 11** dan **Bootstrap 5**. Aplikasi ini dirancang untuk memudahkan pengelolaan administrasi perpustakaan, mulai dari manajemen buku, anggota, hingga pencatatan transaksi peminjaman, pengembalian, dan perhitungan denda keterlambatan secara otomatis.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🚀 Fitur Utama
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **Dashboard Statistik Dinamis**
+    - Ringkasan total judul & stok buku, jumlah anggota, dan kategori.
+    - Statistik transaksi: peminjaman aktif, selesai, terlambat, serta rekap denda (lunas & belum lunas).
+    - Grafik tren peminjaman bulanan menggunakan **Chart.js**.
+    - Visualisasi distribusi kategori buku (doughnut chart).
+    - List Top 5 Buku Terpopuler (paling sering dipinjam).
+    - Daftar peminjaman terbaru dan daftar anggota dengan peminjaman yang terlambat.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- **Manajemen Buku & Kategori**
+    - Kelola data buku: Judul, Kode Buku, Penulis, Penerbit, Tahun Terbit, Stok, ISBN, Sinopsis, dan unggah Cover Buku.
+    - Relasi Many-to-Many antara Buku dan Kategori.
 
-## Learning Laravel
+- **Manajemen Anggota**
+    - Pencatatan data anggota (Nama, No. Anggota, Email, No. HP, Alamat).
+    - Pengaturan status keaktifan anggota (Aktif / Nonaktif).
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- **Transaksi Peminjaman & Pengembalian**
+    - Pencatatan tanggal pinjam dan batas waktu pengembalian.
+    - Pencatatan pengembalian buku beserta kondisi buku saat dikembalikan (Baik / Rusak / Hilang).
+    - Perhitungan hari keterlambatan secara otomatis.
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- **Sistem Denda Otomatis**
+    - Otomatis menghitung akumulasi denda keterlambatan berdasarkan jumlah hari terlambat.
+    - Pencatatan riwayat pembayaran denda (Belum Bayar / Lunas).
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+- **Log Aktivitas (Audit Trail)**
+    - Pencatatan riwayat aktivitas CRUD sistem secara otomatis menggunakan package `spatie/laravel-activitylog`.
 
-## Agentic Development
+- **Multi-Role Autentikasi**
+    - **Admin**: Memiliki akses penuh terhadap seluruh fitur termasuk manajemen kategori buku dan log aktivitas.
+    - **Petugas**: Memiliki akses ke manajemen buku, anggota, peminjaman, pengembalian, dan denda.
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+---
+
+## 🛠️ Teknologi yang Digunakan
+
+- **Backend**: PHP 8.2+ & Laravel 11
+- **Database**: MySQL / MariaDB
+- **Frontend**: Bootstrap 5, Bootstrap Icons, & Chart.js (via CDN)
+- **Library/Package**:
+    - `laravel/breeze` (Autentikasi starter kit)
+    - `spatie/laravel-activitylog` (Pencatatan log aktivitas)
+
+---
+
+## ⚙️ Cara Instalasi & Menjalankan Projek
+
+Ikuti langkah-langkah di bawah ini untuk menjalankan projek di lingkungan lokal Anda:
+
+### 1. Clone Repository
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+git clone https://github.com/username/Sistem-Perpustakaan-Digital.git
+cd Sistem-Perpustakaan-Digital
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+### 2. Install Dependensi Composer
 
-## Contributing
+```bash
+composer install
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 3. Konfigurasi Environment File
 
-## Code of Conduct
+Salin file `.env.example` menjadi `.env`:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+copy .env.example .env
+```
 
-## Security Vulnerabilities
+Buka file `.env` yang baru dibuat dan sesuaikan konfigurasi database Anda:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3006
+DB_DATABASE=sistem_perpustakaan_digital
+DB_USERNAME=root
+DB_PASSWORD=
+```
 
-## License
+### 4. Generate Application Key
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```bash
+php artisan key:generate
+```
+
+### 5. Jalankan Migrasi dan Seeder
+
+Jalankan perintah ini untuk membuat tabel beserta data awal (seeders):
+
+```bash
+php artisan migrate --seed
+```
+
+### 6. Hubungkan Storage Link
+
+Gunakan perintah ini untuk membuat symlink agar cover buku yang diunggah dapat diakses publik:
+
+```bash
+php artisan storage:link
+```
+
+### 7. Jalankan Server Lokal
+
+```bash
+php artisan serve
+```
+
+Buka peramban (browser) Anda dan akses `http://127.0.0.1:8000`.
+
+---
+
+<!-- ## 🔑 Kredensial Akun Default
+
+Berikut adalah kredensial default yang dibuat oleh seeder untuk uji coba:
+
+### 1. Akun Admin
+- **Email**: `admin@perpustakaan.com`
+- **Password**: `password`
+
+### 2. Akun Petugas
+- **Email**: `petugas@perpustakaan.com`
+- **Password**: `password` -->
