@@ -6,29 +6,26 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\Activitylog\LogOptions;
 
-class Buku extends Model
+class Anggota extends Model
 {
     use HasFactory, LogsActivity;
 
-    protected $fillable = [
-        'kode_buku', 'judul', 'penulis', 'penerbit',
-        'tahun_terbit', 'stok', 'isbn', 'sinopsis', 'cover'
-    ];
+    protected $fillable = ['no_anggota', 'nama', 'email', 'no_hp', 'alamat', 'status'];
 
     public function getActivitylogOptions(): LogOptions
     {
-        return LogOptions::defaults()->logAll()->useLogName('buku');
-    }
-
-    // Relasi Many-to-Many ke Kategori
-    public function kategoris()
-    {
-        return $this->belongsToMany(Kategori::class, 'buku_kategori');
+        return LogOptions::defaults()->logAll()->useLogName('anggota');
     }
 
     // Relasi One-to-Many ke Peminjaman
     public function peminjamans()
     {
         return $this->hasMany(Peminjaman::class);
+    }
+
+    // Relasi One-to-Many ke Denda
+    public function dendas()
+    {
+        return $this->hasMany(Denda::class);
     }
 }
