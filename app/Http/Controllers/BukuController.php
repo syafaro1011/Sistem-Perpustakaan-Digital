@@ -4,48 +4,61 @@ namespace App\Http\Controllers;
 use App\Models\Buku;
 use App\Models\Kategori;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class BukuController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $bukus = Buku::with('kategoris')->latest()->paginate(10);
+        $query = Buku::with('kategoris');
+
+        if ($request->filled('search')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('judul', 'like', '%' . $request->search . '%')
+                    ->orWhere('penulis', 'like', '%' . $request->search . '%')
+                    ->orWhere('kode_buku', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        $bukus = $query->latest()->paginate(10)->withQueryString();
         return view('buku.index', compact('bukus'));
     }
 
     public function create()
     {
-        $kategoris = Kategori::orderBy('nama_kategori')->get();
+        $kategoris = Kategori::all();
         return view('buku.create', compact('kategoris'));
     }
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'kode_buku'    => 'required|string|unique:bukus,kode_buku',
-            'judul'        => 'required|string|max:255',
-            'penulis'      => 'required|string|max:255',
-            'penerbit'     => 'required|string|max:255',
-            'tahun_terbit' => 'required|digits:4|integer',
-            'stok'         => 'required|integer|min:0',
-            'isbn'         => 'nullable|string|max:20',
-            'sinopsis'     => 'nullable|string',
-            'cover'        => 'nullable|image|max:2048',
+        $request->validate([
+            'kode_buku' => 'required|unique:bukus|max:50',
+            'judul' => 'required|string|max:255',
+            'penulis' => 'required|string|max:100',
+            'penerbit' => 'nullable|string|max:100',
+            'tahun_terbit' => 'nullable|digits:4|integer',
+            'stok' => 'required|integer|min:0',
+            'isbn' => 'nullable|string|max:20',
+            'sinopsis' => 'nullable|string',
             'kategori_ids' => 'nullable|array',
-            'kategori_ids.*' => 'exists:kategoris,id',
+            'cover' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
+        $data = $request->except(['cover', 'kategori_ids', '_token']);
+
         if ($request->hasFile('cover')) {
-            $validated['cover'] = $request->file('cover')->store('covers', 'public');
+            $data['cover'] = $request->file('cover')->store('covers', 'public');
         }
 
-        $buku = Buku::create($validated);
+        $buku = Buku::create($data);
 
         if ($request->filled('kategori_ids')) {
             $buku->kategoris()->sync($request->kategori_ids);
         }
 
-        return redirect()->route('buku.index')->with('success', 'Buku berhasil ditambahkan.');
+        return redirect()->route('buku.index')
+            ->with('success', 'Buku berhasil ditambahkan.');
     }
 
     public function show(Buku $buku)
@@ -56,41 +69,47 @@ class BukuController extends Controller
 
     public function edit(Buku $buku)
     {
-        $kategoris = Kategori::orderBy('nama_kategori')->get();
-        $selectedKategoris = $buku->kategoris->pluck('id')->toArray();
-        return view('buku.edit', compact('buku', 'kategoris', 'selectedKategoris'));
+        $kategoris = Kategori::all();
+        $selectedKategori = $buku->kategoris->pluck('id')->toArray();
+        return view('buku.edit', compact('buku', 'kategoris', 'selectedKategori'));
     }
 
     public function update(Request $request, Buku $buku)
     {
-        $validated = $request->validate([
-            'kode_buku'    => 'required|string|unique:bukus,kode_buku,' . $buku->id,
-            'judul'        => 'required|string|max:255',
-            'penulis'      => 'required|string|max:255',
-            'penerbit'     => 'required|string|max:255',
-            'tahun_terbit' => 'required|digits:4|integer',
-            'stok'         => 'required|integer|min:0',
-            'isbn'         => 'nullable|string|max:20',
-            'sinopsis'     => 'nullable|string',
-            'cover'        => 'nullable|image|max:2048',
+        $request->validate([
+            'kode_buku' => 'required|max:50|unique:bukus,kode_buku,' . $buku->id,
+            'judul' => 'required|string|max:255',
+            'penulis' => 'required|string|max:100',
+            'penerbit' => 'nullable|string|max:100',
+            'tahun_terbit' => 'nullable|digits:4|integer',
+            'stok' => 'required|integer|min:0',
+            'isbn' => 'nullable|string|max:20',
+            'sinopsis' => 'nullable|string',
             'kategori_ids' => 'nullable|array',
-            'kategori_ids.*' => 'exists:kategoris,id',
+            'cover' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
+        $data = $request->except(['cover', 'kategori_ids', '_token', '_method']);
+
         if ($request->hasFile('cover')) {
-            $validated['cover'] = $request->file('cover')->store('covers', 'public');
+            if ($buku->cover)
+                Storage::disk('public')->delete($buku->cover);
+            $data['cover'] = $request->file('cover')->store('covers', 'public');
         }
 
-        $buku->update($validated);
+        $buku->update($data);
         $buku->kategoris()->sync($request->kategori_ids ?? []);
 
-        return redirect()->route('buku.index')->with('success', 'Buku berhasil diperbarui.');
+        return redirect()->route('buku.index')
+            ->with('success', 'Buku berhasil diperbarui.');
     }
 
     public function destroy(Buku $buku)
     {
-        $buku->kategoris()->detach();
+        if ($buku->cover)
+            Storage::disk('public')->delete($buku->cover);
         $buku->delete();
-        return redirect()->route('buku.index')->with('success', 'Buku berhasil dihapus.');
+        return redirect()->route('buku.index')
+            ->with('success', 'Buku berhasil dihapus.');
     }
 }

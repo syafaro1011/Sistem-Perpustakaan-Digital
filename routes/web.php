@@ -30,10 +30,13 @@ Route::middleware(['auth'])->group(function () {
     // Routes untuk Admin & Petugas
     Route::middleware(['petugas'])->group(function () {
         Route::resource('buku', BukuController::class);
-        Route::resource('anggota', AnggotaController::class);
+        Route::resource('anggota', AnggotaController::class)->parameters([
+            'anggota' => 'anggota'
+        ]);
         Route::resource('peminjaman', PeminjamanController::class);
         Route::resource('pengembalian', PengembalianController::class);
         Route::resource('denda', DendaController::class);
+        Route::post('/denda/{denda}/bayar', [DendaController::class, 'bayar'])->name('denda.bayar');
     });
 
     // Routes khusus Admin saja

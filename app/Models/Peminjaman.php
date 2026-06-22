@@ -10,6 +10,8 @@ class Peminjaman extends Model
 {
     use HasFactory, LogsActivity;
 
+    protected $table = 'peminjamans';
+
     protected $fillable = [
         'anggota_id', 'buku_id', 'user_id',
         'tanggal_pinjam', 'tanggal_kembali', 'status'

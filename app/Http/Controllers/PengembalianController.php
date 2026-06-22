@@ -5,95 +5,91 @@ use App\Models\Pengembalian;
 use App\Models\Peminjaman;
 use App\Models\Denda;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
 
 class PengembalianController extends Controller
 {
-    public function index()
+    // Denda per hari (Rp)
+    const DENDA_PER_HARI = 2000;
+
+    public function index(Request $request)
     {
-        $pengembalians = Pengembalian::with(['peminjaman.anggota', 'peminjaman.buku', 'denda'])
-            ->latest()
-            ->paginate(10);
+        $query = Pengembalian::with(['peminjaman.anggota', 'peminjaman.buku', 'denda']);
+
+        $pengembalians = $query->latest()->paginate(10)->withQueryString();
         return view('pengembalian.index', compact('pengembalians'));
     }
 
-    public function create()
+    public function create(Request $request)
     {
+        $peminjaman = null;
+
+        if ($request->filled('peminjaman_id')) {
+            $peminjaman = Peminjaman::with(['anggota', 'buku'])
+                ->findOrFail($request->peminjaman_id);
+        }
+
         $peminjamans = Peminjaman::with(['anggota', 'buku'])
             ->where('status', 'dipinjam')
-            ->latest()
             ->get();
-        return view('pengembalian.create', compact('peminjamans'));
+
+        return view('pengembalian.create', compact('peminjamans', 'peminjaman'));
     }
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'peminjaman_id'          => 'required|exists:peminjamans,id',
+        $request->validate([
+            'peminjaman_id' => 'required|exists:peminjamans,id',
             'tanggal_kembali_aktual' => 'required|date',
-            'kondisi_buku'           => 'required|in:baik,rusak_ringan,rusak_berat',
-            'catatan'                => 'nullable|string',
+            'kondisi_buku' => 'required|in:baik,rusak,hilang',
+            'catatan' => 'nullable|string',
         ]);
 
-        $peminjaman = Peminjaman::findOrFail($validated['peminjaman_id']);
+        $peminjaman = Peminjaman::findOrFail($request->peminjaman_id);
 
         // Hitung keterlambatan
-        $tanggalKembaliAktual = Carbon::parse($validated['tanggal_kembali_aktual']);
-        $tanggalSeharusnya    = Carbon::parse($peminjaman->tanggal_kembali);
-        $hariTerlambat        = max(0, $tanggalSeharusnya->diffInDays($tanggalKembaliAktual, false) * -1);
-        // diffInDays returns negative if actual is after due date
-        $hariTerlambat = $tanggalKembaliAktual->gt($tanggalSeharusnya)
-            ? $tanggalSeharusnya->diffInDays($tanggalKembaliAktual)
-            : 0;
+        $hariTerlambat = max(
+            0,
+            now()->parse($request->tanggal_kembali_aktual)
+                ->diffInDays($peminjaman->tanggal_kembali, false) * -1
+        );
 
-        $validated['hari_terlambat'] = $hariTerlambat;
+        $pengembalian = Pengembalian::create([
+            'peminjaman_id' => $request->peminjaman_id,
+            'tanggal_kembali_aktual' => $request->tanggal_kembali_aktual,
+            'hari_terlambat' => $hariTerlambat,
+            'kondisi_buku' => $request->kondisi_buku,
+            'catatan' => $request->catatan,
+        ]);
 
-        $pengembalian = Pengembalian::create($validated);
+        // Update status peminjaman
+        $peminjaman->update([
+            'status' => $hariTerlambat > 0 ? 'terlambat' : 'dikembalikan'
+        ]);
 
-        // Buat denda otomatis jika terlambat (Rp 1.000/hari)
-        if ($hariTerlambat > 0) {
+        // Kembalikan stok buku (jika buku tidak hilang)
+        if ($request->kondisi_buku !== 'hilang') {
+            $peminjaman->buku->increment('stok');
+        }
+
+        // Buat denda otomatis jika terlambat atau buku rusak/hilang
+        $jumlahDenda = $hariTerlambat * self::DENDA_PER_HARI;
+        if ($request->kondisi_buku === 'rusak')
+            $jumlahDenda += 50000;
+        if ($request->kondisi_buku === 'hilang')
+            $jumlahDenda += 200000;
+
+        if ($jumlahDenda > 0) {
             Denda::create([
                 'pengembalian_id' => $pengembalian->id,
-                'anggota_id'      => $peminjaman->anggota_id,
-                'hari_terlambat'  => $hariTerlambat,
-                'jumlah_denda'    => $hariTerlambat * 1000,
-                'status_bayar'    => 'belum',
+                'anggota_id' => $peminjaman->anggota_id,
+                'hari_terlambat' => $hariTerlambat,
+                'jumlah_denda' => $jumlahDenda,
+                'status_bayar' => 'belum_bayar',
             ]);
         }
 
-        // Update stok dan status peminjaman
-        $peminjaman->buku->increment('stok');
-        $peminjaman->update(['status' => 'dikembalikan']);
-
-        return redirect()->route('pengembalian.index')->with('success', 'Pengembalian berhasil dicatat.');
-    }
-
-    public function show(Pengembalian $pengembalian)
-    {
-        $pengembalian->load(['peminjaman.anggota', 'peminjaman.buku', 'denda']);
-        return view('pengembalian.show', compact('pengembalian'));
-    }
-
-    public function edit(Pengembalian $pengembalian)
-    {
-        return view('pengembalian.edit', compact('pengembalian'));
-    }
-
-    public function update(Request $request, Pengembalian $pengembalian)
-    {
-        $validated = $request->validate([
-            'kondisi_buku' => 'required|in:baik,rusak_ringan,rusak_berat',
-            'catatan'      => 'nullable|string',
-        ]);
-
-        $pengembalian->update($validated);
-
-        return redirect()->route('pengembalian.index')->with('success', 'Data pengembalian berhasil diperbarui.');
-    }
-
-    public function destroy(Pengembalian $pengembalian)
-    {
-        $pengembalian->delete();
-        return redirect()->route('pengembalian.index')->with('success', 'Data pengembalian berhasil dihapus.');
+        return redirect()->route('pengembalian.index')
+            ->with('success', 'Pengembalian berhasil dicatat.' .
+                ($jumlahDenda > 0 ? ' Denda: Rp ' . number_format($jumlahDenda) : ''));
     }
 }

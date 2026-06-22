@@ -6,9 +6,19 @@ use Illuminate\Http\Request;
 
 class AnggotaController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $anggotas = Anggota::latest()->paginate(10);
+        $query = Anggota::query();
+
+        if ($request->filled('search')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('nama', 'like', '%' . $request->search . '%')
+                    ->orWhere('no_anggota', 'like', '%' . $request->search . '%')
+                    ->orWhere('email', 'like', '%' . $request->search . '%');
+            });
+        }
+
+        $anggotas = $query->latest()->paginate(10)->withQueryString();
         return view('anggota.index', compact('anggotas'));
     }
 
@@ -19,24 +29,19 @@ class AnggotaController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'no_anggota' => 'required|string|unique:anggotas,no_anggota',
-            'nama'       => 'required|string|max:255',
-            'email'      => 'required|email|unique:anggotas,email',
-            'no_hp'      => 'nullable|string|max:20',
-            'alamat'     => 'nullable|string',
-            'status'     => 'required|in:aktif,nonaktif',
+        $request->validate([
+            'no_anggota' => 'required|unique:anggotas|max:20',
+            'nama' => 'required|string|max:100',
+            'email' => 'required|email|unique:anggotas',
+            'no_hp' => 'nullable|string|max:20',
+            'alamat' => 'nullable|string',
+            'status' => 'required|in:aktif,nonaktif',
         ]);
 
-        Anggota::create($validated);
+        Anggota::create($request->all());
 
-        return redirect()->route('anggota.index')->with('success', 'Anggota berhasil ditambahkan.');
-    }
-
-    public function show(Anggota $anggota)
-    {
-        $anggota->load('peminjamans.buku', 'dendas');
-        return view('anggota.show', compact('anggota'));
+        return redirect()->route('anggota.index')
+            ->with('success', 'Anggota berhasil ditambahkan.');
     }
 
     public function edit(Anggota $anggota)
@@ -46,23 +51,25 @@ class AnggotaController extends Controller
 
     public function update(Request $request, Anggota $anggota)
     {
-        $validated = $request->validate([
-            'no_anggota' => 'required|string|unique:anggotas,no_anggota,' . $anggota->id,
-            'nama'       => 'required|string|max:255',
-            'email'      => 'required|email|unique:anggotas,email,' . $anggota->id,
-            'no_hp'      => 'nullable|string|max:20',
-            'alamat'     => 'nullable|string',
-            'status'     => 'required|in:aktif,nonaktif',
+        $request->validate([
+            'no_anggota' => 'required|max:20|unique:anggotas,no_anggota,' . $anggota->id,
+            'nama' => 'required|string|max:100',
+            'email' => 'required|email|unique:anggotas,email,' . $anggota->id,
+            'no_hp' => 'nullable|string|max:20',
+            'alamat' => 'nullable|string',
+            'status' => 'required|in:aktif,nonaktif',
         ]);
 
-        $anggota->update($validated);
+        $anggota->update($request->all());
 
-        return redirect()->route('anggota.index')->with('success', 'Anggota berhasil diperbarui.');
+        return redirect()->route('anggota.index')
+            ->with('success', 'Anggota berhasil diperbarui.');
     }
 
     public function destroy(Anggota $anggota)
     {
         $anggota->delete();
-        return redirect()->route('anggota.index')->with('success', 'Anggota berhasil dihapus.');
+        return redirect()->route('anggota.index')
+            ->with('success', 'Anggota berhasil dihapus.');
     }
 }
