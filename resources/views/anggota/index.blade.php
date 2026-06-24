@@ -8,32 +8,37 @@
 
 @section('content')
     <div class="card border-0 shadow-sm">
-        <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+        <div class="card-header bg-white d-flex align-items-center justify-content-between py-3">
             <h6 class="mb-0 fw-semibold">Daftar Anggota</h6>
 
-            <!-- Export -->
-            <div class="dropdown">
-                <button class="btn btn-outline-secondary btn-sm dropdown-toggle" data-bs-toggle="dropdown">
-                    <i class="bi bi-download me-1"></i>Export
-                </button>
-                <ul class="dropdown-menu dropdown-menu-end">
-                    <li>
-                        <a class="dropdown-item" href="{{ route('export.excel.anggota') }}">
-                            <i class="bi bi-file-earmark-excel text-success me-2"></i>Export Excel
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" href="{{ route('export.pdf.anggota') }}">
-                            <i class="bi bi-file-earmark-pdf text-danger me-2"></i>Export PDF
-                        </a>
-                    </li>
-                </ul>
+            <div class="d-flex gap-2">
+
+                <!-- Tambah Anggota -->
+                <a href="{{ route('anggota.create') }}" class="btn btn-primary btn-sm">
+                    <i class="bi bi-plus-lg me-1"></i>Tambah Anggota
+                </a>
+
+                <!-- Export -->
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary btn-sm dropdown-toggle" data-bs-toggle="dropdown">
+                        <i class="bi bi-download me-1"></i>Export
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li>
+                            <a class="dropdown-item" href="{{ route('export.excel.anggota') }}">
+                                <i class="bi bi-file-earmark-excel text-success me-2"></i>Export Excel
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{{ route('export.pdf.anggota') }}">
+                                <i class="bi bi-file-earmark-pdf text-danger me-2"></i>Export PDF
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
 
-            <!-- Tambah Anggota -->
-            <a href="{{ route('anggota.create') }}" class="btn btn-primary btn-sm">
-                <i class="bi bi-plus-lg me-1"></i>Tambah Anggota
-            </a>
+
         </div>
         <div class="card-body">
             <form method="GET" class="mb-3">
