@@ -28,6 +28,10 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        activity('auth')
+            ->causedBy(auth()->user())
+            ->log('User login: ' . auth()->user()->email);
+
         return redirect()->intended(route('dashboard', absolute: false));
     }
 

@@ -26,6 +26,12 @@ class DendaController extends Controller
             'tanggal_bayar' => now(),
         ]);
 
+        activity('denda')
+            ->causedBy(auth()->user())
+            ->performedOn($denda)
+            ->withProperties(['jumlah_denda' => $denda->jumlah_denda])
+            ->log('Pembayaran denda: Rp ' . number_format($denda->jumlah_denda));
+
         return redirect()->route('denda.index')
             ->with('success', 'Denda berhasil dibayar.');
     }

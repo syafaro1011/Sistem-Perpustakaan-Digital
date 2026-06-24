@@ -45,6 +45,12 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('kategori', KategoriController::class);
         Route::get('/activity-log', [ActivityLogController::class, 'index'])
             ->name('activity-log.index');
+        Route::get('/activity-log', [ActivityLogController::class, 'index'])
+            ->name('activity-log.index');
+        Route::delete('/activity-log/{activity}', [ActivityLogController::class, 'destroy'])
+            ->name('activity-log.destroy');
+        Route::delete('/activity-log', [ActivityLogController::class, 'destroyAll'])
+            ->name('activity-log.destroy-all');
     });
 
     Route::prefix('export')->name('export.')->group(function () {
