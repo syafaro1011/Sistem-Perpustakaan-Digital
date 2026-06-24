@@ -308,32 +308,6 @@
 
     </ul>
 
-    {{-- User Footer --}}
-    <div class="sidebar-footer">
-        <div class="d-flex align-items-center gap-2 mb-2">
-            <div class="rounded-circle bg-white bg-opacity-15 d-flex align-items-center
-                        justify-content-center text-white flex-shrink-0"
-                 style="width:34px;height:34px">
-                <i class="bi bi-person-fill"></i>
-            </div>
-            <div class="overflow-hidden">
-                <div class="user-info-name">{{ auth()->user()->name }}</div>
-                <span class="badge bg-{{ auth()->user()->role === 'admin' ? 'danger' : 'primary' }}"
-                      style="font-size:.6rem">
-                    {{ strtoupper(auth()->user()->role) }}
-                </span>
-            </div>
-        </div>
-        <form method="POST" action="{{ route('logout') }}">
-            @csrf
-            <button type="submit"
-                    class="btn btn-sm w-100 text-white border-white border-opacity-25"
-                    style="background:rgba(255,255,255,.08)">
-                <i class="bi bi-box-arrow-right me-1"></i>Logout
-            </button>
-        </form>
-    </div>
-
 </nav>
 
 {{-- ── TOPBAR ──────────────────────────────────────── --}}
@@ -346,14 +320,14 @@
         </button>
         <div>
             <h6 class="mb-0 fw-semibold">@yield('page-title', 'Dashboard')</h6>
-            <nav aria-label="breadcrumb">
+            <!-- <nav aria-label="breadcrumb">
                 <ol class="breadcrumb breadcrumb-sm mb-0" style="font-size:.75rem">
                     <li class="breadcrumb-item">
                         <a href="{{ route('dashboard') }}" class="text-decoration-none">Home</a>
                     </li>
                     @yield('breadcrumb')
                 </ol>
-            </nav>
+            </nav> -->
         </div>
     </div>
 
@@ -394,6 +368,14 @@
 
 {{-- ── MAIN CONTENT ────────────────────────────────── --}}
 <main class="main-content">
+    <!-- <nav aria-label="breadcrumb">
+                <ol class="breadcrumb breadcrumb-sm mb-0" style="font-size:.75rem">
+                    <li class="breadcrumb-item">
+                        <a href="{{ route('dashboard') }}" class="text-decoration-none">Home</a>
+                    </li>
+                    @yield('breadcrumb')
+                </ol>
+            </nav> -->
     <x-alert />
     @yield('content')
 </main>

@@ -19,8 +19,9 @@ class DashboardController extends Controller
         $totalAnggota = Anggota::count();
         $totalKategori = Kategori::count();
         $peminjamanAktif = Peminjaman::where('status', 'dipinjam')->count();
-        $peminjamanSelesai = Peminjaman::where('status', 'dikembalikan')->count();
+        $dikembalikan = Peminjaman::where('status', 'dikembalikan')->count();
         $totalTerlambat = Peminjaman::where('status', 'terlambat')->count();
+        $peminjamanSelesai = $dikembalikan + $totalTerlambat;
         $dendaBelumBayar = Denda::where('status_bayar', 'belum_bayar')->sum('jumlah_denda');
         $dendaSudahBayar = Denda::where('status_bayar', 'sudah_bayar')->sum('jumlah_denda');
 
