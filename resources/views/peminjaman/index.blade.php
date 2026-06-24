@@ -10,6 +10,26 @@
     <div class="card border-0 shadow-sm">
         <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
             <h6 class="mb-0 fw-semibold">Daftar Peminjaman</h6>
+
+            <!-- Export -->
+            <div class="dropdown">
+                <button class="btn btn-outline-secondary btn-sm dropdown-toggle" data-bs-toggle="dropdown">
+                    <i class="bi bi-download me-1"></i>Export
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                        <a class="dropdown-item" href="{{ route('export.excel.peminjaman') }}">
+                            <i class="bi bi-file-earmark-excel text-success me-2"></i>Export Excel
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="{{ route('export.pdf.peminjaman') }}">
+                            <i class="bi bi-file-earmark-pdf text-danger me-2"></i>Export PDF
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
             <a href="{{ route('peminjaman.create') }}" class="btn btn-primary btn-sm">
                 <i class="bi bi-plus-lg me-1"></i>Tambah Peminjaman
             </a>

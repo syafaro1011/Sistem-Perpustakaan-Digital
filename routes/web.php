@@ -9,6 +9,7 @@ use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\PengembalianController;
 use App\Http\Controllers\DendaController;
 use App\Http\Controllers\ActivityLogController;
+use App\Http\Controllers\ExportController;
 
 // Redirect root ke dashboard atau login
 Route::get('/', function () {
@@ -46,4 +47,17 @@ Route::middleware(['auth'])->group(function () {
             ->name('activity-log.index');
     });
 
+    Route::prefix('export')->name('export.')->group(function () {
+        // Excel
+        Route::get('/excel/buku', [ExportController::class, 'excelBuku'])->name('excel.buku');
+        Route::get('/excel/anggota', [ExportController::class, 'excelAnggota'])->name('excel.anggota');
+        Route::get('/excel/peminjaman', [ExportController::class, 'excelPeminjaman'])->name('excel.peminjaman');
+        Route::get('/excel/denda', [ExportController::class, 'excelDenda'])->name('excel.denda');
+
+        // PDF
+        Route::get('/pdf/buku', [ExportController::class, 'pdfBuku'])->name('pdf.buku');
+        Route::get('/pdf/anggota', [ExportController::class, 'pdfAnggota'])->name('pdf.anggota');
+        Route::get('/pdf/peminjaman', [ExportController::class, 'pdfPeminjaman'])->name('pdf.peminjaman');
+        Route::get('/pdf/denda', [ExportController::class, 'pdfDenda'])->name('pdf.denda');
+    });
 });

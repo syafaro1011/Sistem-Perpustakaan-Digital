@@ -10,6 +10,26 @@
     <div class="card border-0 shadow-sm">
         <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
             <h6 class="mb-0 fw-semibold">Daftar Denda</h6>
+
+            <!-- Export -->
+            <div class="dropdown">
+                <button class="btn btn-outline-secondary btn-sm dropdown-toggle" data-bs-toggle="dropdown">
+                    <i class="bi bi-download me-1"></i>Export
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                        <a class="dropdown-item" href="{{ route('export.excel.denda') }}">
+                            <i class="bi bi-file-earmark-excel text-success me-2"></i>Export Excel
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="{{ route('export.pdf.denda') }}">
+                            <i class="bi bi-file-earmark-pdf text-danger me-2"></i>Export PDF
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
             <form method="GET" class="d-flex gap-2">
                 <select name="status" class="form-select form-select-sm" style="max-width:160px"
                     onchange="this.form.submit()">
