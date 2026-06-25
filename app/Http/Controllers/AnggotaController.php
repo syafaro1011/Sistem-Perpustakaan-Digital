@@ -18,6 +18,14 @@ class AnggotaController extends Controller
             });
         }
 
+        if ($request->filled('aktif')) {
+            $query->where('status', "aktif");
+        }
+
+        if ($request->filled('nonaktif')) {
+            $query->where('status', "nonaktif");
+        }
+
         $anggotas = $query->latest()->paginate(10)->withQueryString();
         return view('anggota.index', compact('anggotas'));
     }
