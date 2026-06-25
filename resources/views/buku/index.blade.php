@@ -2,111 +2,183 @@
 @section('title', 'Data Buku')
 @section('page-title', 'Data Buku')
 
-@section('breadcrumb')
-    <li class="breadcrumb-item active">Buku</li>
+@section('breadcrumb-trail')
+    <span class="mx-1">/</span>Buku
 @endsection
 
 @section('content')
-    <div class="card border-0 shadow-sm">
-        <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
-            <h6 class="mb-0 fw-semibold">Daftar Buku</h6>
+
+    <div class="card" style="border-color:#d1f5e8;">
+
+        {{-- ── Header ──────────────────────────────────────────── --}}
+        <div class="card-header bg-white d-flex justify-content-between align-items-center py-3 px-4"
+            style="border-bottom:1px solid #d1f5e8;border-radius:12px 12px 0 0;">
+
+            <div>
+                <div style="font-size:.9rem;font-weight:700;color:#0d2b26;">Daftar Buku</div>
+                <div style="font-size:.74rem;color:#94a3b8;font-weight:500;margin-top:1px;">
+                    Kelola koleksi buku perpustakaan
+                </div>
+            </div>
 
             <div class="d-flex gap-2">
-                <!--Tambah Buku-->
-                <a href="{{ route('buku.create') }}" class="btn btn-primary btn-sm">
+                <a href="{{ route('buku.create') }}" class="btn btn-sm fw-bold"
+                    style="background:#0f9b7a;color:#fff;border:none;border-radius:8px;font-size:.8rem;padding:.4rem .9rem;">
                     <i class="bi bi-plus-lg me-1"></i>Tambah Buku
                 </a>
 
-                <!-- Export -->
                 <div class="dropdown">
-                    <button class="btn btn-outline-secondary btn-sm dropdown-toggle" data-bs-toggle="dropdown">
+                    <button class="btn btn-sm dropdown-toggle fw-600"
+                        style="background:#f0faf7;color:#0f9b7a;border:1px solid #d1f5e8;border-radius:8px;font-size:.8rem;font-weight:600;"
+                        data-bs-toggle="dropdown">
                         <i class="bi bi-download me-1"></i>Export
                     </button>
-                    <ul class="dropdown-menu dropdown-menu-end">
+                    <ul class="dropdown-menu dropdown-menu-end border shadow-sm mt-1"
+                        style="border-color:#d1f5e8!important;min-width:170px;">
                         <li>
-                            <a class="dropdown-item" href="{{ route('export.excel.buku') }}">
-                                <i class="bi bi-file-earmark-excel text-success me-2"></i>Export Excel
+                            <a class="dropdown-item py-2" href="{{ route('export.excel.buku') }}"
+                                style="font-size:.83rem;font-weight:500;">
+                                <i class="bi bi-file-earmark-excel me-2" style="color:#16a34a;"></i>Export Excel
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="{{ route('export.pdf.buku') }}">
-                                <i class="bi bi-file-earmark-pdf text-danger me-2"></i>Export PDF
+                            <a class="dropdown-item py-2" href="{{ route('export.pdf.buku') }}"
+                                style="font-size:.83rem;font-weight:500;">
+                                <i class="bi bi-file-earmark-pdf me-2" style="color:#dc2626;"></i>Export PDF
                             </a>
                         </li>
                     </ul>
                 </div>
             </div>
-
         </div>
-        <div class="card-body">
-            <form method="GET" class="mb-3">
-                <div class="input-group" style="max-width:360px">
-                    <input type="text" name="search" class="form-control form-control-sm"
-                        placeholder="Cari judul, penulis, kode..." value="{{ request('search') }}">
-                    <button class="btn btn-outline-secondary btn-sm"><i class="bi bi-search"></i></button>
+
+        {{-- ── Search Bar ───────────────────────────────────────── --}}
+        <div class="px-4 pt-3 pb-2">
+            <form method="GET">
+                <div class="input-group" style="max-width:360px;">
+                    <span class="input-group-text"
+                        style="background:#f0faf7;border-color:#d1f5e8;border-right:none;border-radius:8px 0 0 8px;">
+                        <i class="bi bi-search" style="color:#0f9b7a;font-size:.85rem;"></i>
+                    </span>
+                    <input type="text" name="search" class="form-control" placeholder="Cari judul, penulis, kode..."
+                        value="{{ request('search') }}"
+                        style="border-color:#d1f5e8;border-left:none;border-radius:0 8px 8px 0;font-size:.85rem;">
                 </div>
             </form>
+        </div>
 
+        {{-- ── Table ────────────────────────────────────────────── --}}
+        <div class="card-body p-0 px-4 pb-3">
             <div class="table-responsive">
-                <table class="table table-hover align-middle">
-                    <thead class="table-light">
-                        <tr>
-                            <th width="50">#</th>
-                            <th>Kode</th>
-                            <th>Judul</th>
-                            <th>Penulis</th>
-                            <th>Kategori</th>
-                            <th width="80">Stok</th>
-                            <th width="130">Aksi</th>
+                <table class="table table-hover align-middle mb-0">
+                    <thead>
+                        <tr style="background:#fafffe;">
+                            <th
+                                style="width:46px;font-size:.71rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#94a3b8;border-bottom:2px solid #d1f5e8;">
+                                #</th>
+                            <th
+                                style="font-size:.71rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#94a3b8;border-bottom:2px solid #d1f5e8;">
+                                Kode</th>
+                            <th
+                                style="font-size:.71rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#94a3b8;border-bottom:2px solid #d1f5e8;">
+                                Judul Buku</th>
+                            <th
+                                style="font-size:.71rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#94a3b8;border-bottom:2px solid #d1f5e8;">
+                                Penulis</th>
+                            <th
+                                style="font-size:.71rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#94a3b8;border-bottom:2px solid #d1f5e8;">
+                                Kategori</th>
+                            <th
+                                style="width:70px;font-size:.71rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#94a3b8;border-bottom:2px solid #d1f5e8;text-align:center;">
+                                Stok</th>
+                            <th
+                                style="width:110px;font-size:.71rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#94a3b8;border-bottom:2px solid #d1f5e8;">
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($bukus as $i => $buku)
-                            <tr>
-                                <td>{{ $bukus->firstItem() + $i }}</td>
-                                <td><code>{{ $buku->kode_buku }}</code></td>
-                                <td>
-                                    <div class="fw-semibold">{{ $buku->judul }}</div>
-                                    <small class="text-muted">{{ $buku->penerbit ?? '' }}</small>
-                                </td>
-                                <td>{{ $buku->penulis }}</td>
-                                <td>
-                                    @foreach($buku->kategoris as $k)
-                                        <span class="badge bg-secondary rounded-pill">{{ $k->nama_kategori }}</span>
-                                    @endforeach
+                            <tr style="border-bottom:1px solid #f0faf7;">
+                                <td style="font-size:.82rem;color:#94a3b8;font-weight:600;">
+                                    {{ $bukus->firstItem() + $i }}
                                 </td>
                                 <td>
-                                    <span class="badge {{ $buku->stok > 0 ? 'bg-success' : 'bg-danger' }}">
+                                    <code
+                                        style="background:#f0fdf9;color:#0b7a60;padding:2px 7px;border-radius:5px;font-size:.78rem;font-weight:700;">
+                                        {{ $buku->kode_buku }}
+                                    </code>
+                                </td>
+                                <td>
+                                    <div style="font-weight:600;font-size:.85rem;color:#0d2b26;">{{ $buku->judul }}</div>
+                                    @if($buku->penerbit)
+                                        <small style="color:#94a3b8;font-weight:500;">{{ $buku->penerbit }}</small>
+                                    @endif
+                                </td>
+                                <td style="font-size:.84rem;font-weight:500;color:#374151;">{{ $buku->penulis }}</td>
+                                <td>
+                                    <div class="d-flex flex-wrap gap-1">
+                                        @foreach($buku->kategoris as $k)
+                                            <span class="badge"
+                                                style="background:#f0fdf9;color:#0b7a60;font-size:.69rem;font-weight:700;border-radius:5px;">
+                                                {{ $k->nama_kategori }}
+                                            </span>
+                                        @endforeach
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge fw-bold"
+                                        style="{{ $buku->stok > 0 ? 'background:#f0fdf4;color:#166534;' : 'background:#fef2f2;color:#991b1b;' }}font-size:.75rem;border-radius:6px;padding:.3rem .6rem;">
                                         {{ $buku->stok }}
                                     </span>
                                 </td>
                                 <td>
-                                    <a href="{{ route('buku.show', $buku) }}" class="btn btn-sm btn-outline-info">
-                                        <i class="bi bi-eye"></i>
-                                    </a>
-                                    <a href="{{ route('buku.edit', $buku) }}" class="btn btn-sm btn-outline-warning">
-                                        <i class="bi bi-pencil"></i>
-                                    </a>
-                                    <form action="{{ route('buku.destroy', $buku) }}" method="POST" class="d-inline"
-                                        onsubmit="return confirm('Hapus buku ini?')">
-                                        @csrf @method('DELETE')
-                                        <button class="btn btn-sm btn-outline-danger">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </form>
+                                    <div class="d-flex gap-1">
+                                        <a href="{{ route('buku.show', $buku) }}" class="btn btn-sm"
+                                            style="background:#eff6ff;color:#3b82f6;border:1px solid #bfdbfe;border-radius:6px;padding:.28rem .55rem;"
+                                            title="Detail">
+                                            <i class="bi bi-eye" style="font-size:.82rem;"></i>
+                                        </a>
+                                        <a href="{{ route('buku.edit', $buku) }}" class="btn btn-sm"
+                                            style="background:#fefce8;color:#a16207;border:1px solid #fde68a;border-radius:6px;padding:.28rem .55rem;"
+                                            title="Edit">
+                                            <i class="bi bi-pencil" style="font-size:.82rem;"></i>
+                                        </a>
+                                        <form action="{{ route('buku.destroy', $buku) }}" method="POST" class="d-inline">
+                                            @csrf @method('DELETE')
+                                            <button type="submit" class="btn btn-sm"
+                                                style="background:#fef2f2;color:#dc2626;border:1px solid #fecaca;border-radius:6px;padding:.28rem .55rem;"
+                                                title="Hapus" data-confirm="Hapus buku &quot;{{ $buku->judul }}&quot;?">
+                                                <i class="bi bi-trash" style="font-size:.82rem;"></i>
+                                            </button>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="text-center text-muted py-4">
-                                    Belum ada data buku.
+                                <td colspan="7" class="text-center py-5">
+                                    <i class="bi bi-journals d-block mb-2" style="font-size:2.2rem;color:#d1f5e8;"></i>
+                                    <span style="font-size:.85rem;color:#94a3b8;font-weight:500;">Belum ada data
+                                        buku.</span><br>
+                                    <a href="{{ route('buku.create') }}" class="btn btn-sm mt-2 fw-bold"
+                                        style="background:#0f9b7a;color:#fff;border:none;border-radius:7px;font-size:.78rem;">
+                                        <i class="bi bi-plus-lg me-1"></i>Tambah Sekarang
+                                    </a>
                                 </td>
                             </tr>
                         @endforelse
                     </tbody>
                 </table>
             </div>
-            {{ $bukus->links() }}
+
+            {{-- Pagination --}}
+            @if($bukus->hasPages())
+                <div class="mt-3 d-flex justify-content-end">
+                    {{ $bukus->links() }}
+                </div>
+            @endif
         </div>
+
     </div>
+
 @endsection
