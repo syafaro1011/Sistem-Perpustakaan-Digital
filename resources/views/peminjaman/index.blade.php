@@ -65,7 +65,6 @@
                     style="max-width:155px;border-color:#d1f5e8;border-radius:8px;font-size:.83rem;font-weight:600;color:#374151;">
                     <option value="">Semua Status</option>
                     <option value="dipinjam" {{ request('status') === 'dipinjam' ? 'selected' : '' }}>Dipinjam</option>
-                    <option value="dikembalikan" {{ request('status') === 'dikembalikan' ? 'selected' : '' }}>Dikembalikan
                     </option>
                     <option value="terlambat" {{ request('status') === 'terlambat' ? 'selected' : '' }}>Terlambat</option>
                 </select>
@@ -121,7 +120,8 @@
                                             <div style="font-weight:700;font-size:.84rem;color:#0d2b26;">{{ $p->anggota->nama }}
                                             </div>
                                             <div style="font-size:.72rem;color:#94a3b8;font-weight:500;">
-                                                {{ $p->anggota->no_anggota }}</div>
+                                                {{ $p->anggota->no_anggota }}
+                                            </div>
                                         </div>
                                     </div>
                                 </td>
@@ -132,8 +132,8 @@
                                     </div>
                                     <code
                                         style="background:#f0fdf9;color:#0b7a60;padding:1px 5px;border-radius:4px;font-size:.71rem;">
-                                        {{ $p->buku->kode_buku }}
-                                    </code>
+                                                        {{ $p->buku->kode_buku }}
+                                                    </code>
                                 </td>
                                 <td style="font-size:.83rem;font-weight:500;color:#374151;">
                                     {{ $p->tanggal_pinjam->format('d/m/Y') }}
@@ -154,7 +154,7 @@
                                         $statusStyle = match (true) {
                                             $terlambat => 'background:#fef3c7;color:#92400e;',
                                             $p->status === 'dipinjam' => 'background:#eff6ff;color:#1d4ed8;',
-                                            $p->status === 'dikembalikan' => 'background:#f0fdf4;color:#166534;',
+
                                             $p->status === 'terlambat' => 'background:#fef2f2;color:#991b1b;',
                                             default => 'background:#f1f5f9;color:#475569;',
                                         };
