@@ -27,7 +27,20 @@ class BukuController extends Controller
     public function create()
     {
         $kategoris = Kategori::all();
-        return view('buku.create', compact('kategoris'));
+        // Generate kode otomatis: BK-XXXX (cari nomor terakhir + 1)
+        $last = Buku::orderByDesc('id')->first();
+
+        if ($last) {
+            // Ambil angka dari kode terakhir, misal "BK-0023" → 23
+            $lastNum = (int) preg_replace('/[^0-9]/', '', $last->kode_buku);
+            $nextNum = $lastNum + 1;
+        } else {
+            $nextNum = 1;
+        }
+
+        $kodeBuku = 'BK-' . str_pad($nextNum, 4, '0', STR_PAD_LEFT);
+
+        return view('buku.create', compact('kategoris', 'kodeBuku'));
     }
 
     public function store(Request $request)

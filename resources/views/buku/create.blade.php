@@ -60,6 +60,32 @@
     .cover-drop:hover { border-color: #0f9b7a; background: #f0fdf9; }
     .cover-drop input[type=file] { display: none; }
     #cover-preview { display: none; max-height: 120px; border-radius: 8px; margin-top: .75rem; object-fit: cover; }
+
+    /* Style khusus field kode otomatis */
+    .kode-auto-wrap {
+        position: relative;
+    }
+    .kode-auto-wrap .form-control {
+        background   : #f0fdf9;
+        border-color : #6ee7c7;
+        color        : #0b7a60;
+        font-weight  : 700;
+        font-family  : 'Courier New', monospace;
+        padding-right : 2.6rem;
+    }
+    .kode-auto-badge {
+        position    : absolute;
+        right       : 10px;
+        top         : 50%;
+        transform   : translateY(-50%);
+        font-size   : .62rem;
+        font-weight : 700;
+        background  : #d1fae5;
+        color       : #065f46;
+        padding     : 1px 6px;
+        border-radius: 4px;
+        pointer-events: none;
+    }
 </style>
 @endpush
 
@@ -79,15 +105,9 @@
                 <i class="bi bi-bookmark"></i> Identitas Buku
             </div>
             <div class="row g-3">
-                <div class="col-md-4">
-                    <label class="form-label">Kode Buku <span class="text-danger">*</span></label>
-                    <input type="text" name="kode_buku"
-                           class="form-control @error('kode_buku') is-invalid @enderror"
-                           value="{{ old('kode_buku') }}"
-                           placeholder="BK-0001">
-                    @error('kode_buku')<div class="invalid-feedback">{{ $message }}</div>@enderror
-                </div>
-                <div class="col-md-8">
+
+                {{-- Kode Buku: otomatis, readonly --}}
+                <div class="col-md-6">
                     <label class="form-label">Judul Buku <span class="text-danger">*</span></label>
                     <input type="text" name="judul"
                            class="form-control @error('judul') is-invalid @enderror"
@@ -95,6 +115,25 @@
                            placeholder="Masukkan judul lengkap buku">
                     @error('judul')<div class="invalid-feedback">{{ $message }}</div>@enderror
                 </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">
+                        Kode Buku
+                    </label>
+                    <div class="kode-auto-wrap">
+                        <input type="text" name="kode_buku"
+                               class="form-control @error('kode_buku') is-invalid @enderror"
+                               value="{{ old('kode_buku', $kodeBuku) }}"
+                               readonly>
+                    </div>
+                    @error('kode_buku')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                    <div style="font-size:.71rem;color:#94a3b8;margin-top:3px;">
+                        Kode dibuat otomatis oleh sistem
+                    </div>
+                </div>
+
                 <div class="col-md-6">
                     <label class="form-label">Penulis <span class="text-danger">*</span></label>
                     <input type="text" name="penulis"
@@ -148,7 +187,6 @@
                 <label class="kat-pill">
                     <input type="checkbox" name="kategori_ids[]" value="{{ $k->id }}"
                            {{ in_array($k->id, old('kategori_ids', [])) ? 'checked' : '' }}>
-                    <i class="bi bi-check2 d-none check-icon" style="font-size:.8rem;"></i>
                     {{ $k->nama_kategori }}
                 </label>
                 @endforeach
@@ -173,24 +211,29 @@
                     <div style="font-size:.8rem;color:#94a3b8;font-weight:500;margin-top:.4rem;">
                         Klik untuk upload cover
                     </div>
-                    <div style="font-size:.72rem;color:#d1d5db;margin-top:2px;">PNG, JPG, JPEG maks 2MB</div>
+                    <div style="font-size:.72rem;color:#d1d5db;margin-top:2px;">
+                        PNG, JPG, JPEG maks 2MB
+                    </div>
                     <img id="cover-preview" src="" alt="Preview">
                 </label>
-                @error('cover')<div class="text-danger mt-1" style="font-size:.78rem;">{{ $message }}</div>@enderror
+                @error('cover')
+                    <div class="text-danger mt-1" style="font-size:.78rem;">{{ $message }}</div>
+                @enderror
             </div>
         </div>
 
         {{-- Action Buttons --}}
         <div class="card" style="border-color:#d1f5e8;">
             <div class="card-body d-flex flex-column gap-2">
-                <button type="submit"
-                        class="btn fw-bold"
-                        style="background:#0f9b7a;color:#fff;border:none;border-radius:8px;font-size:.875rem;padding:.55rem;">
+                <button type="submit" class="btn fw-bold"
+                        style="background:#0f9b7a;color:#fff;border:none;border-radius:8px;
+                               font-size:.875rem;padding:.55rem;">
                     <i class="bi bi-check-lg me-1"></i>Simpan Buku
                 </button>
-                <a href="{{ route('buku.index') }}"
-                   class="btn fw-600"
-                   style="background:#f1f5f9;color:#64748b;border:1px solid #e2e8f0;border-radius:8px;font-size:.875rem;font-weight:600;padding:.55rem;text-align:center;">
+                <a href="{{ route('buku.index') }}" class="btn"
+                   style="background:#f1f5f9;color:#64748b;border:1px solid #e2e8f0;
+                          border-radius:8px;font-size:.875rem;font-weight:600;
+                          padding:.55rem;text-align:center;">
                     Batal
                 </a>
             </div>

@@ -60,6 +60,32 @@
     .cover-drop:hover { border-color: #0f9b7a; background: #f0fdf9; }
     .cover-drop input[type=file] { display: none; }
     #cover-preview { max-height: 120px; border-radius: 8px; margin-top: .6rem; object-fit: cover; }
+
+    /* Style khusus field kode otomatis */
+    .kode-auto-wrap {
+        position: relative;
+    }
+    .kode-auto-wrap .form-control {
+        background   : #f0fdf9;
+        border-color : #6ee7c7;
+        color        : #0b7a60;
+        font-weight  : 700;
+        font-family  : 'Courier New', monospace;
+        padding-right : 2.6rem;
+    }
+    .kode-auto-badge {
+        position    : absolute;
+        right       : 10px;
+        top         : 50%;
+        transform   : translateY(-50%);
+        font-size   : .62rem;
+        font-weight : 700;
+        background  : #d1fae5;
+        color       : #065f46;
+        padding     : 1px 6px;
+        border-radius: 4px;
+        pointer-events: none;
+    }
 </style>
 @endpush
 
@@ -79,19 +105,26 @@
                 <i class="bi bi-bookmark"></i> Identitas Buku
             </div>
             <div class="row g-3">
-                <div class="col-md-4">
-                    <label class="form-label">Kode Buku <span class="text-danger">*</span></label>
-                    <input type="text" name="kode_buku"
-                           class="form-control @error('kode_buku') is-invalid @enderror"
-                           value="{{ old('kode_buku', $buku->kode_buku) }}">
-                    @error('kode_buku')<div class="invalid-feedback">{{ $message }}</div>@enderror
-                </div>
-                <div class="col-md-8">
+
+                <div class="col-md-6">
                     <label class="form-label">Judul Buku <span class="text-danger">*</span></label>
                     <input type="text" name="judul"
                            class="form-control @error('judul') is-invalid @enderror"
                            value="{{ old('judul', $buku->judul) }}">
                     @error('judul')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Kode Buku <span class="text-danger">*</span></label>
+                    <div class="kode-auto-wrap">
+                        <input type="text" name="kode_buku"
+                               class="form-control @error('kode_buku') is-invalid @enderror"
+                               value="{{ old('kode_buku', $buku->kode_buku) }}" readonly>
+                        @error('kode_buku')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                        <div style="font-size:.71rem;color:#94a3b8;margin-top:3px;">
+                            Kode dibuat otomatis oleh sistem
+                        </div>
+                    </div>
                 </div>
                 <div class="col-md-6">
                     <label class="form-label">Penulis <span class="text-danger">*</span></label>
