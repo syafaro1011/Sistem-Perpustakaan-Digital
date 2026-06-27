@@ -56,6 +56,31 @@
         transition: background .15s;
     }
     .status-toggle:checked + .status-label .status-dot { background: #0f9b7a; }
+
+    .kode-auto-wrap {
+        position: relative;
+    }
+    .kode-auto-wrap .form-control {
+        background   : #f0fdf9;
+        border-color : #6ee7c7;
+        color        : #0b7a60;
+        font-weight  : 700;
+        font-family  : 'Courier New', monospace;
+        padding-right : 2.6rem;
+    }
+    .kode-auto-badge {
+        position    : absolute;
+        right       : 10px;
+        top         : 50%;
+        transform   : translateY(-50%);
+        font-size   : .62rem;
+        font-weight : 700;
+        background  : #d1fae5;
+        color       : #065f46;
+        padding     : 1px 6px;
+        border-radius: 4px;
+        pointer-events: none;
+    }
 </style>
 @endpush
 
@@ -73,14 +98,6 @@
                 <i class="bi bi-person-badge"></i> Data Diri Anggota
             </div>
             <div class="row g-3">
-                <div class="col-md-5">
-                    <label class="form-label">No. Anggota <span class="text-danger">*</span></label>
-                    <input type="text" name="no_anggota"
-                           class="form-control @error('no_anggota') is-invalid @enderror"
-                           value="{{ old('no_anggota') }}"
-                           placeholder="ANG-0001">
-                    @error('no_anggota')<div class="invalid-feedback">{{ $message }}</div>@enderror
-                </div>
                 <div class="col-md-7">
                     <label class="form-label">Nama Lengkap <span class="text-danger">*</span></label>
                     <input type="text" name="nama"
@@ -88,6 +105,17 @@
                            value="{{ old('nama') }}"
                            placeholder="Nama lengkap anggota">
                     @error('nama')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                </div>
+                <div class="col-md-5 kode-auto-wrap">
+                    <label class="form-label">No. Anggota <span class="text-danger">*</span></label>
+                    <input type="text" name="no_anggota"
+                           class="form-control @error('no_anggota') is-invalid @enderror"
+                           value="{{ old('no_anggota', $noAnggota) }}"
+                           readonly>
+                    @error('no_anggota')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                    <div style="font-size:.71rem;color:#94a3b8;margin-top:3px;">
+                        Kode dibuat otomatis oleh sistem
+                    </div>
                 </div>
                 <div class="col-md-7">
                     <label class="form-label">Email <span class="text-danger">*</span></label>

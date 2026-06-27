@@ -32,7 +32,17 @@ class AnggotaController extends Controller
 
     public function create()
     {
-        return view('anggota.create');
+        $last = Anggota::orderByDesc('id')->first();
+
+        if ($last) {
+            $lastNum = (int) preg_replace('/[^0-9]/', '', $last->no_anggota);
+            $nextNum = $lastNum + 1;
+        } else {
+            $nextNum = 1;
+        }
+
+        $noAnggota = 'AG-' . str_pad($nextNum, 4, '0', STR_PAD_LEFT);
+        return view('anggota.create', compact('noAnggota'));
     }
 
     public function store(Request $request)
