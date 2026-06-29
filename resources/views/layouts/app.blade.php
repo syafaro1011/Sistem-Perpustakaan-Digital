@@ -26,11 +26,13 @@
             --sb-accent-hover: #0b8269;
             --sb-text-muted: rgba(255, 255, 255, .40);
             --sb-width: 240px;
+            --sb-collapsed-width: 60px;
             --tb-height: 54px;
             --page-bg: #f0faf7;
             --card-border: #d1f5e8;
             --accent: #0f9b7a;
             --accent-light: #f0fdf9;
+            --sb-transition: .25s cubic-bezier(.4, 0, .2, 1);
         }
 
         /* ─── Base ──────────────────────────────────────── */
@@ -59,7 +61,13 @@
             display: flex;
             flex-direction: column;
             overflow-y: auto;
-            transition: transform .25s cubic-bezier(.4, 0, .2, 1);
+            overflow-x: hidden;
+            transition: width var(--sb-transition), transform var(--sb-transition);
+        }
+
+        /* ── Collapsed state ── */
+        .sidebar.collapsed {
+            width: var(--sb-collapsed-width);
         }
 
         /* Brand */
@@ -70,6 +78,13 @@
             padding: 15px 14px 14px;
             border-bottom: 1px solid rgba(255, 255, 255, .07);
             text-decoration: none;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .sidebar.collapsed .sidebar-brand {
+            justify-content: center;
+            padding: 15px 0 14px;
         }
 
         .sidebar-brand-icon {
@@ -93,6 +108,7 @@
             font-weight: 700;
             color: #f0fdf9;
             line-height: 1.2;
+            transition: opacity var(--sb-transition), width var(--sb-transition);
         }
 
         .sidebar-brand-sub {
@@ -100,6 +116,12 @@
             font-weight: 400;
             color: var(--sb-text-muted);
             margin-top: 1px;
+        }
+
+        /* Hide brand text when collapsed */
+        .sidebar.collapsed .sidebar-brand-title,
+        .sidebar.collapsed .sidebar-brand-sub {
+            display: none;
         }
 
         /* Nav section label */
@@ -111,6 +133,16 @@
             text-transform: uppercase;
             letter-spacing: 1.1px;
             padding: 14px 14px 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            transition: opacity var(--sb-transition);
+        }
+
+        .sidebar.collapsed .nav-section-title {
+            opacity: 0;
+            height: 0;
+            padding: 0;
+            pointer-events: none;
         }
 
         /* Nav link */
@@ -124,7 +156,10 @@
             display: flex;
             align-items: center;
             gap: 9px;
-            transition: background .15s, color .15s;
+            transition: background .15s, color .15s, padding .25s, margin .25s;
+            white-space: nowrap;
+            overflow: hidden;
+            position: relative;
         }
 
         .sidebar .nav-link i {
@@ -142,6 +177,56 @@
             background: var(--sb-accent);
         }
 
+        /* Collapsed nav links — icon only, centered */
+        .sidebar.collapsed .nav-link {
+            justify-content: center;
+            padding: 9px 0;
+            margin: 1px 8px;
+            gap: 0;
+        }
+
+        .sidebar.collapsed .nav-link .nav-link-text {
+            display: none;
+        }
+
+        /* Badge adjust when collapsed */
+        .sidebar.collapsed .nav-link .badge {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            font-size: .55rem;
+            padding: .15em .35em;
+        }
+
+        /* Tooltip on collapsed hover */
+        .sidebar.collapsed .nav-link {
+            overflow: visible;
+        }
+
+        .sidebar.collapsed .nav-link::after {
+            content: attr(data-label);
+            position: absolute;
+            left: calc(var(--sb-collapsed-width) - 4px);
+            top: 50%;
+            transform: translateY(-50%);
+            background: #0d2b26;
+            color: #f0fdf9;
+            font-size: .75rem;
+            font-weight: 600;
+            padding: .3rem .65rem;
+            border-radius: 6px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .15s;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, .25);
+            z-index: 400;
+        }
+
+        .sidebar.collapsed .nav-link:hover::after {
+            opacity: 1;
+        }
+
         /* Sidebar footer (user info) */
         .sidebar-footer {
             padding: 10px 12px;
@@ -150,6 +235,19 @@
             display: flex;
             align-items: center;
             gap: 9px;
+            white-space: nowrap;
+            overflow: hidden;
+            transition: padding var(--sb-transition);
+        }
+
+        .sidebar.collapsed .sidebar-footer {
+            justify-content: center;
+            padding: 10px 0;
+        }
+
+        .sidebar.collapsed .sidebar-footer-info,
+        .sidebar.collapsed .sidebar-footer-logout {
+            display: none;
         }
 
         .sidebar-avatar {
@@ -195,6 +293,11 @@
             align-items: center;
             padding: 0 1.25rem;
             justify-content: space-between;
+            transition: left var(--sb-transition);
+        }
+
+        body.sb-collapsed .topbar {
+            left: var(--sb-collapsed-width);
         }
 
         .topbar-title {
@@ -273,6 +376,11 @@
             margin-top: var(--tb-height);
             padding: 1.25rem;
             min-height: calc(100vh - var(--tb-height));
+            transition: margin-left var(--sb-transition);
+        }
+
+        body.sb-collapsed .main-content {
+            margin-left: var(--sb-collapsed-width);
         }
 
         /* ─── Breadcrumb ────────────────────────────────── */
@@ -480,25 +588,26 @@
         <ul class="nav flex-column py-2 flex-grow-1">
 
             <li class="nav-item">
-                <a href="{{ route('dashboard') }}"
+                <a href="{{ route('dashboard') }}" data-label="Dashboard"
                     class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
-                    <i class="bi bi-speedometer2"></i>Dashboard
+                    <i class="bi bi-speedometer2"></i><span class="nav-link-text">Dashboard</span>
                 </a>
             </li>
 
             <span class="nav-section-title">Koleksi Buku</span>
 
             <li class="nav-item">
-                <a href="{{ route('buku.index') }}" class="nav-link {{ request()->routeIs('buku.*') ? 'active' : '' }}">
-                    <i class="bi bi-journals"></i>Data Buku
+                <a href="{{ route('buku.index') }}" data-label="Data Buku"
+                    class="nav-link {{ request()->routeIs('buku.*') ? 'active' : '' }}">
+                    <i class="bi bi-journals"></i><span class="nav-link-text">Data Buku</span>
                 </a>
             </li>
 
             @if(auth()->user()->role === 'admin')
                 <li class="nav-item">
-                    <a href="{{ route('kategori.index') }}"
+                    <a href="{{ route('kategori.index') }}" data-label="Kategori Buku"
                         class="nav-link {{ request()->routeIs('kategori.*') ? 'active' : '' }}">
-                        <i class="bi bi-tags"></i>Kategori Buku
+                        <i class="bi bi-tags"></i><span class="nav-link-text">Kategori Buku</span>
                     </a>
                 </li>
             @endif
@@ -506,16 +615,16 @@
             <span class="nav-section-title">Sirkulasi</span>
 
             <li class="nav-item">
-                <a href="{{ route('anggota.index') }}"
+                <a href="{{ route('anggota.index') }}" data-label="Anggota"
                     class="nav-link {{ request()->routeIs('anggota.*') ? 'active' : '' }}">
-                    <i class="bi bi-people"></i>Anggota
+                    <i class="bi bi-people"></i><span class="nav-link-text">Anggota</span>
                 </a>
             </li>
 
             <li class="nav-item">
-                <a href="{{ route('peminjaman.index') }}"
+                <a href="{{ route('peminjaman.index') }}" data-label="Peminjaman"
                     class="nav-link {{ request()->routeIs('peminjaman.*') ? 'active' : '' }}">
-                    <i class="bi bi-arrow-left-right"></i>Peminjaman
+                    <i class="bi bi-arrow-left-right"></i><span class="nav-link-text">Peminjaman</span>
                     @php
                         $aktif = \App\Models\Peminjaman::where('status', 'dipinjam')
                             ->where('tanggal_kembali', '<', now())->count();
@@ -527,16 +636,16 @@
             </li>
 
             <li class="nav-item">
-                <a href="{{ route('pengembalian.index') }}"
+                <a href="{{ route('pengembalian.index') }}" data-label="Pengembalian"
                     class="nav-link {{ request()->routeIs('pengembalian.*') ? 'active' : '' }}">
-                    <i class="bi bi-arrow-return-left"></i>Pengembalian
+                    <i class="bi bi-arrow-return-left"></i><span class="nav-link-text">Pengembalian</span>
                 </a>
             </li>
 
             <li class="nav-item">
-                <a href="{{ route('denda.index') }}"
+                <a href="{{ route('denda.index') }}" data-label="Denda"
                     class="nav-link {{ request()->routeIs('denda.*') ? 'active' : '' }}">
-                    <i class="bi bi-cash-coin"></i>Denda
+                    <i class="bi bi-cash-coin"></i><span class="nav-link-text">Denda</span>
                     @php
                         $belumBayar = \App\Models\Denda::where('status_bayar', 'belum_bayar')->count();
                     @endphp
@@ -550,9 +659,9 @@
                 <span class="nav-section-title">Admin</span>
 
                 <li class="nav-item">
-                    <a href="{{ route('activity-log.index') }}"
+                    <a href="{{ route('activity-log.index') }}" data-label="Activity Log"
                         class="nav-link {{ request()->routeIs('activity-log.*') ? 'active' : '' }}">
-                        <i class="bi bi-clock-history"></i>Activity Log
+                        <i class="bi bi-clock-history"></i><span class="nav-link-text">Activity Log</span>
                     </a>
                 </li>
             @endif
@@ -564,11 +673,11 @@
             <div class="sidebar-avatar">
                 {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
             </div>
-            <div style="min-width:0;">
+            <div class="sidebar-footer-info" style="min-width:0;">
                 <div class="sidebar-user-name">{{ auth()->user()->name }}</div>
                 <div class="sidebar-user-role">{{ ucfirst(auth()->user()->role) }}</div>
             </div>
-            <form method="POST" action="{{ route('logout') }}" class="ms-auto">
+            <form method="POST" action="{{ route('logout') }}" class="ms-auto sidebar-footer-logout">
                 @csrf
                 <button type="submit" class="btn btn-sm border-0 p-1" style="color:rgba(255,255,255,.35);"
                     title="Logout">
@@ -582,6 +691,13 @@
     {{-- ── TOPBAR ──────────────────────────────────────── --}}
     <header class="topbar">
         <div class="d-flex align-items-center gap-3">
+            {{-- Desktop collapse toggle --}}
+            <button class="btn btn-sm border-0 d-none d-md-flex p-1 align-items-center justify-content-center"
+                id="sidebarCollapseBtn" onclick="toggleCollapse()" style="color:#0d2b26; width:30px; height:30px;"
+                aria-label="Toggle sidebar">
+                <i class="bi bi-layout-sidebar fs-5" id="collapseIcon"></i>
+            </button>
+
             {{-- Mobile toggle --}}
             <button class="btn btn-sm border-0 d-md-none p-1" onclick="toggleSidebar()" style="color:#0d2b26;"
                 aria-label="Toggle menu">
@@ -661,6 +777,31 @@
             document.getElementById('sidebar').classList.remove('show');
             document.getElementById('sidebarOverlay').classList.remove('show');
         }
+
+        /* ── Sidebar Desktop Collapse ───────────────── */
+        function toggleCollapse() {
+            const sidebar = document.getElementById('sidebar');
+            const body = document.body;
+            const icon = document.getElementById('collapseIcon');
+            const isCollapsed = sidebar.classList.toggle('collapsed');
+            body.classList.toggle('sb-collapsed', isCollapsed);
+
+            // Ganti ikon tombol
+            icon.className = isCollapsed ? 'bi bi-layout-sidebar-reverse fs-5' : 'bi bi-layout-sidebar fs-5';
+
+            // Simpan state ke localStorage
+            localStorage.setItem('sidebarCollapsed', isCollapsed ? '1' : '0');
+        }
+
+        // Restore state saat halaman load
+        (function () {
+            if (localStorage.getItem('sidebarCollapsed') === '1') {
+                document.getElementById('sidebar').classList.add('collapsed');
+                document.body.classList.add('sb-collapsed');
+                const icon = document.getElementById('collapseIcon');
+                if (icon) icon.className = 'bi bi-layout-sidebar-reverse fs-5';
+            }
+        })();
 
         /* ── Auto-dismiss alert (4 detik) ─────────── */
         setTimeout(() => {
