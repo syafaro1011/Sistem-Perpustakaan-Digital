@@ -45,7 +45,7 @@
         body {
             background: var(--page-bg);
             font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-            font-size: .9rem;
+            font-size: 1rem;
             color: #1e293b;
         }
 
@@ -104,7 +104,7 @@
         }
 
         .sidebar-brand-title {
-            font-size: .875rem;
+            font-size: .95rem;
             font-weight: 700;
             color: #f0fdf9;
             line-height: 1.2;
@@ -112,7 +112,7 @@
         }
 
         .sidebar-brand-sub {
-            font-size: .69rem;
+            font-size: .76rem;
             font-weight: 400;
             color: var(--sb-text-muted);
             margin-top: 1px;
@@ -128,7 +128,7 @@
         .nav-section-title {
             display: block;
             color: rgba(255, 255, 255, .28);
-            font-size: .67rem;
+            font-size: .73rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1.1px;
@@ -151,7 +151,7 @@
             padding: 7px 10px;
             border-radius: 8px;
             margin: 1px 8px;
-            font-size: .82rem;
+            font-size: .9rem;
             font-weight: 500;
             display: flex;
             align-items: center;
@@ -180,9 +180,15 @@
         /* Collapsed nav links — icon only, centered */
         .sidebar.collapsed .nav-link {
             justify-content: center;
+            align-items: center;
             padding: 9px 0;
-            margin: 1px 8px;
+            margin: 1px 6px;
             gap: 0;
+            width: calc(var(--sb-collapsed-width) - 12px);
+        }
+
+        .sidebar.collapsed .nav-link i {
+            margin: 0 auto;
         }
 
         .sidebar.collapsed .nav-link .nav-link-text {
@@ -266,7 +272,7 @@
 
         .sidebar-user-name {
             color: #f0fdf9;
-            font-size: .78rem;
+            font-size: .85rem;
             font-weight: 600;
             max-width: 120px;
             overflow: hidden;
@@ -276,7 +282,7 @@
 
         .sidebar-user-role {
             color: var(--sb-text-muted);
-            font-size: .68rem;
+            font-size: .76rem;
         }
 
         /* ─── Topbar ────────────────────────────────────── */
@@ -301,14 +307,14 @@
         }
 
         .topbar-title {
-            font-size: .9rem;
+            font-size: 1rem;
             font-weight: 700;
             color: #0d2b26;
             line-height: 1.2;
         }
 
         .topbar-breadcrumb {
-            font-size: .7rem;
+            font-size: .78rem;
             font-weight: 500;
             color: #94a3b8;
             margin-top: 1px;
@@ -385,7 +391,7 @@
 
         /* ─── Breadcrumb ────────────────────────────────── */
         .breadcrumb {
-            font-size: .72rem;
+            font-size: .8rem;
             font-weight: 500;
             margin-bottom: .75rem;
         }
@@ -415,13 +421,13 @@
             border-bottom: 1px solid var(--card-border);
             background: #fff;
             font-weight: 600;
-            font-size: .85rem;
+            font-size: .95rem;
             color: #0d2b26;
         }
 
         /* ─── Tables ────────────────────────────────────── */
         .table thead th {
-            font-size: .72rem;
+            font-size: .8rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: .5px;
@@ -434,19 +440,19 @@
             vertical-align: middle;
             color: #374151;
             font-weight: 500;
-            font-size: .85rem;
+            font-size: .94rem;
         }
 
         /* ─── Buttons ───────────────────────────────────── */
         .btn {
             border-radius: 8px;
-            font-size: .845rem;
+            font-size: .925rem;
             font-weight: 600;
         }
 
         .btn-sm {
             padding: .3rem .75rem;
-            font-size: .775rem;
+            font-size: .855rem;
             border-radius: 6px;
         }
 
@@ -474,7 +480,7 @@
         .badge {
             border-radius: 6px;
             font-weight: 700;
-            font-size: .7rem;
+            font-size: .78rem;
             letter-spacing: .2px;
         }
 
@@ -483,7 +489,7 @@
         .form-select {
             border-radius: 8px;
             border-color: #d1d5db;
-            font-size: .875rem;
+            font-size: .95rem;
             font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
         }
 
@@ -495,7 +501,7 @@
 
         .form-label {
             font-weight: 600;
-            font-size: .82rem;
+            font-size: .9rem;
             color: #374151;
         }
 
@@ -508,7 +514,7 @@
             border-radius: 7px !important;
             border: 1px solid var(--card-border);
             color: #374151;
-            font-size: .8rem;
+            font-size: .88rem;
             font-weight: 600;
             padding: .35rem .72rem;
         }
@@ -526,8 +532,23 @@
         /* ─── Alert ─────────────────────────────────────── */
         .alert {
             border-radius: 10px;
-            font-size: .855rem;
+            font-size: .94rem;
             font-weight: 500;
+        }
+
+        /* ─── Sidebar Collapse Toggle Button ────────────── */
+        #sidebarCollapseBtn {
+            border-radius: 7px;
+            transition: background .15s;
+        }
+
+        #sidebarCollapseBtn:hover {
+            background: var(--accent-light);
+        }
+
+        #collapseIcon {
+            display: inline-block;
+            transition: transform var(--sb-transition);
         }
 
         /* ─── Mobile Overlay ────────────────────────────── */
@@ -695,7 +716,7 @@
             <button class="btn btn-sm border-0 d-none d-md-flex p-1 align-items-center justify-content-center"
                 id="sidebarCollapseBtn" onclick="toggleCollapse()" style="color:#0d2b26; width:30px; height:30px;"
                 aria-label="Toggle sidebar">
-                <i class="bi bi-layout-sidebar fs-5" id="collapseIcon"></i>
+                <i class="bi bi-chevron-left fs-6" id="collapseIcon"></i>
             </button>
 
             {{-- Mobile toggle --}}
@@ -786,8 +807,8 @@
             const isCollapsed = sidebar.classList.toggle('collapsed');
             body.classList.toggle('sb-collapsed', isCollapsed);
 
-            // Ganti ikon tombol
-            icon.className = isCollapsed ? 'bi bi-layout-sidebar-reverse fs-5' : 'bi bi-layout-sidebar fs-5';
+            // Ganti arah panah
+            icon.className = isCollapsed ? 'bi bi-chevron-right fs-6' : 'bi bi-chevron-left fs-6';
 
             // Simpan state ke localStorage
             localStorage.setItem('sidebarCollapsed', isCollapsed ? '1' : '0');
@@ -799,7 +820,7 @@
                 document.getElementById('sidebar').classList.add('collapsed');
                 document.body.classList.add('sb-collapsed');
                 const icon = document.getElementById('collapseIcon');
-                if (icon) icon.className = 'bi bi-layout-sidebar-reverse fs-5';
+                if (icon) icon.className = 'bi bi-chevron-right fs-6';
             }
         })();
 
