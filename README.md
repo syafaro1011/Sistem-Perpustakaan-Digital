@@ -2,7 +2,7 @@
 
 [Bahasa Indonesia](README.md) | [English](README.en.md)
 
-Sistem Perpustakaan Digital adalah aplikasi berbasis web yang dibangun menggunakan framework **Laravel 11** dan **Bootstrap 5**. Aplikasi ini dirancang untuk memudahkan pengelolaan administrasi perpustakaan, mulai dari manajemen buku, anggota, hingga pencatatan transaksi peminjaman, pengembalian, dan perhitungan denda keterlambatan secara otomatis.
+Sistem Perpustakaan Digital adalah aplikasi berbasis web yang dibangun menggunakan framework **Laravel 13** dan **Bootstrap 5**. Aplikasi ini dirancang untuk memudahkan pengelolaan administrasi perpustakaan, mulai dari manajemen buku, anggota, hingga pencatatan transaksi peminjaman, pengembalian, dan perhitungan denda keterlambatan secara otomatis.
 
 ---
 
@@ -44,7 +44,7 @@ Sistem Perpustakaan Digital adalah aplikasi berbasis web yang dibangun menggunak
 
 ## 🛠️ Teknologi yang Digunakan
 
-- **Backend**: PHP 8.2+ & Laravel 11
+- **Backend**: PHP 8.3+ & Laravel 13
 - **Database**: MySQL / MariaDB
 - **Frontend**: Bootstrap 5, Bootstrap Icons, & Chart.js (via CDN)
 - **Library/Package**:
@@ -121,7 +121,7 @@ Buka peramban (browser) Anda dan akses `http://127.0.0.1:8000`.
 
 ---
 
-<!-- ## 🔑 Kredensial Akun Default
+## 🔑 Kredensial Akun Default
 
 Berikut adalah kredensial default yang dibuat oleh seeder untuk uji coba:
 
@@ -133,4 +133,4 @@ Berikut adalah kredensial default yang dibuat oleh seeder untuk uji coba:
 ### 2. Akun Petugas
 
 - **Email**: `petugas@perpustakaan.com`
-- **Password**: `password` -->
+- **Password**: `password`

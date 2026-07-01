@@ -2,7 +2,7 @@
 
 [Bahasa Indonesia](README.md) | [English](README.en.md)
 
-Digital Library System is a web-based application built using the **Laravel 11** framework and **Bootstrap 5**. This application is designed to simplify library administration management, ranging from managing books and members to recording borrowing transactions, returns, and automatic calculation of late fines.
+Digital Library System is a web-based application built using the **Laravel 13** framework and **Bootstrap 5**. This application is designed to simplify library administration management, ranging from managing books and members to recording borrowing transactions, returns, and automatic calculation of late fines.
 
 ---
 
@@ -44,7 +44,7 @@ Digital Library System is a web-based application built using the **Laravel 11**
 
 ## 🛠️ Technology Stack
 
-- **Backend**: PHP 8.2+ & Laravel 11
+- **Backend**: PHP 8.3+ & Laravel 13
 - **Database**: MySQL / MariaDB
 - **Frontend**: Bootstrap 5, Bootstrap Icons, & Chart.js (via CDN)
 - **Library/Package**:
@@ -121,7 +121,7 @@ Open your browser and navigate to `http://127.0.0.1:8000`.
 
 ---
 
-<!-- ## 🔑 Default Account Credentials
+## 🔑 Default Account Credentials
 
 Here are the default credentials created by the seeder for testing:
 
@@ -131,4 +131,5 @@ Here are the default credentials created by the seeder for testing:
 
 ### 2. Staff (Petugas) Account
 - **Email**: `petugas@perpustakaan.com`
-- **Password**: `password` -->
+- **Password**: `password`
+
